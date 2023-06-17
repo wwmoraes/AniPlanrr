@@ -1,0 +1,9 @@
+.dockerignore
+.git
+.github
+.gitignore
+*.example
+*.md
+config
+Dockerfile
+Makefile

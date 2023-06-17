@@ -1,5 +1,9 @@
-FROM python:3
+FROM python:3-alpine
+
 WORKDIR /code
-COPY code /code/
+
+COPY requirements.txt .
 RUN pip install -r requirements.txt
+
+COPY code ./
 CMD ["/code/runSync.sh"]
