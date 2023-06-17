@@ -17,6 +17,7 @@ else:
 
 load_dotenv('config/.env')
 ANILIST_USERNAME = os.getenv('ANILIST_USERNAME')
+ANILIST_STATUS = os.getenv('ANILIST_STATUS')
 MONITOR = os.getenv('MONITOR')
 RETRY = os.getenv('RETRY')
 if RETRY is not None:

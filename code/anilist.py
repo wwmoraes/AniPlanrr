@@ -1,5 +1,14 @@
 import requests
 from util import pr, dumpVar, LOGGING
+from enum import StrEnum
+
+class MediaListStatus(StrEnum):
+  WATCHING = "CURRENT"
+  PLANNING = "PLANNING"
+  COMPLETED = "COMPLETED"
+  DROPPED = "DROPPED"
+  PAUSED = "PAUSED"
+  REPEATING = "REPEATING"
 
 
 def convertToDict(entry):
@@ -10,11 +19,16 @@ def convertToDict(entry):
         'anilistId': entry['media']['id']
     }
 
+def mediaListStatusFrom(status) -> MediaListStatus:
+    return MediaListStatus.__dict__.get(
+        str(status).upper(),
+        MediaListStatus.PLANNING,
+    )
 
-def getAniList(username):
+def getAniList(username, status):
     query = query = """
-                query ($username: String) {
-                MediaListCollection(userName: $username, type: ANIME, status: PLANNING) {
+                query ($username: String, $status: MediaListStatus) {
+                MediaListCollection(userName: $username, type: ANIME, status: $status) {
                     lists {
                     name
                     entries {
@@ -41,7 +55,8 @@ def getAniList(username):
 
     # Define our query variables and values that will be used in the query request
     variables = {
-        'username': username
+        'username': username,
+        'status': mediaListStatusFrom(status).value
     }
     url = 'https://graphql.anilist.co'
     # Make the HTTP Api request
@@ -55,10 +70,6 @@ def getAniList(username):
     entries = response.json(
     )['data']['MediaListCollection']['lists'][0]
 
-    # if name is not Planned, throw error
-    if entries['name'] != "Planning":
-        pr("Error: List name is not Planning")
-        return
     # Create list of titles - year objects
     titleYearListTV = []
     titleYearListMovies = []

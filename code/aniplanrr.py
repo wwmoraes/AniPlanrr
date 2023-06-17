@@ -26,11 +26,11 @@ def runSonarr(sonarr, aniList):
     # Remove obvious matches
     newShowList = diffDicts(aniList, sonarrList)
     # Remove less obvious matches via IDs/Mapping
-    
+
     newShowList = indexSonarrList(sonarr, newShowList, mapping, sonarrList)
     if LOGGING == "True":
         pr("Found " + str(len(newShowList)) + " new shows to add to Sonarr")
-    
+
     # send each item in newShows to get_id_from_sonarr
     sendToSonarr(sonarr, newShowList, sonarrList)
 
@@ -50,7 +50,7 @@ def runRadarr(radarr, aniMovieList):
 def main():
     if LOGGING == "True":
         pr("Getting AniList for " + ANILIST_USERNAME)
-    [aniList, aniMovieList] = getAniList(str(ANILIST_USERNAME))
+    [aniList, aniMovieList] = getAniList(str(ANILIST_USERNAME), str(ANILIST_STATUS))
     # filter anilist if anilist[2] is in ignorelist
     if RETRY == "False" or RETRY == "Manual":
         aniList = [x for x in aniList if x['anilistId'] not in ignoreList]
